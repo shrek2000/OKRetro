@@ -7,7 +7,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class AllManfactureres {
+public class Manufacturers {
 
     @SerializedName("makes")
     @Expose
@@ -31,7 +31,7 @@ public class AllManfactureres {
         this.makes = makes;
     }
 
-    public AllManfactureres withMakes(List<Make> makes) {
+    public Manufacturers withMakes(List<Make> makes) {
         this.makes = makes;
         return this;
     }
