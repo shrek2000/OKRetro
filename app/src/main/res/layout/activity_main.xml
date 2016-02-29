@@ -11,6 +11,10 @@
 
     android:columnCount="1"
     >
-    <Button android:id="@+id/manufactureres" android:text="@string/man_request"      android:layout_gravity="center_vertical"/>
+    <Spinner android:id="@+id/queries"  android:layout_width="match_parent"
+        android:layout_height="wrap_content"   android:layout_gravity="center_vertical"
+        android:entries="@array/queries_options"
+        android:prompt="@string/select_query"
+        />
     <TextView  android:id="@+id/responseText"   android:background="@color/lightblue"  android:layout_gravity="center_horizontal"  android:layout_height="match_parent"  android:layout_width="match_parent" android:minLines="4" android:minWidth="@dimen/activity_vertical_margin" android:minHeight="@dimen/activity_horizontal_margin"/>
 </GridLayout>

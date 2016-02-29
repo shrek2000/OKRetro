@@ -8,4 +8,10 @@
 
   <!--  <string name="base_url">http://127.0.0.1/</string>
 -->
+    <string name="select_query">Select Query</string>
+    <string-array name="queries_options">
+        <item>All Vechiles</item>
+        <item>All new Vechiles</item>
+        <item>Recalls in 2015</item>
+    </string-array>
 </resources>
