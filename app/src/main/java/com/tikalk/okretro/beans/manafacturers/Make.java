@@ -113,4 +113,13 @@ public class Make {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "Make{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", niceName='" + niceName + '\'' +
+                ", models=" + models +
+                '}';
+    }
 }

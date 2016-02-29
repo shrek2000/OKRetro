@@ -60,4 +60,11 @@ public class Year {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "Year{" +
+                "id=" + id +
+                ", year=" + year +
+                '}';
+    }
 }

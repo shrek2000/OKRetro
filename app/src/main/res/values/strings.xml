@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">OKRetro</string>
+    <string name="man_request">Manufacturers Request</string>
+    <!--
+    For tests use localhost
+    -->
+    <string name="base_url">https://api.edmunds.com/</string>
+
+  <!--  <string name="base_url">http://127.0.0.1/</string>
+-->
 </resources>

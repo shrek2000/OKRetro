@@ -36,4 +36,12 @@ public class Manufacturers {
         return this;
     }
 
+
+
+    @Override
+    public String toString() {
+        return "Manufacturers{" +
+                "makes=" + makes +
+                '}';
+    }
 }

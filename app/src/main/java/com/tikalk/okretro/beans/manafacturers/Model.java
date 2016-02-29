@@ -113,4 +113,13 @@ public class Model {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "Model{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", niceName='" + niceName + '\'' +
+                ", years=" + years +
+                '}';
+    }
 }
