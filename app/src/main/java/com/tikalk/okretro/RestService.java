@@ -12,7 +12,9 @@ import com.tikalk.okretro.beans.recall.Recall;
 import com.tikalk.okretro.client.ManafacturersClient;
 import com.tikalk.okretro.query.APIKey;
 import com.tikalk.okretro.query.manufacturers.APIManufacturers;
+import com.tikalk.okretro.realm.recall.RecallUtils;
 
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -171,9 +173,10 @@ public class RestService extends IntentService {
             @Override
             public void onResponse(Call<Recall> call, Response<Recall> response) {
                 try {
-                    SharedPreferences settings = getSharedPreferences(PREF_DATA, Context.MODE_PRIVATE);
-                    Recall recall = response.body();
-                    settings.edit().putString("response",recall.toString()).commit();
+                    Realm realm = Realm.getInstance(RestService.this);
+                    realm.beginTransaction();
+                    com.tikalk.okretro.realm.recall.Recall recallRealm = RecallUtils.convert(realm,response.body());
+                    realm.commitTransaction();
                     Log.i(RestService.class.toString(),"recall "+ response.message());
                 } catch (Throwable e) {
                   Log.e(RestService.class.getName(),e.getMessage(),e);
