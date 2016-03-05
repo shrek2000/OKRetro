@@ -12,6 +12,9 @@ public class Recall {
     @Expose
     private List<RecallHolder> recallHolder = new ArrayList<RecallHolder>();
 
+    public Recall() {
+    }
+
     /**
      * 
      * @return

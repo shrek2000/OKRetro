@@ -4,11 +4,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.tikalk.okretro.realm.recall.Recall;
+import com.tikalk.okretro.realm.recall.RecallUtils;
+
+import io.realm.Realm;
 
 /**
  * //
@@ -18,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private Spinner spinner;
     private TextView textView;
-
+    private Recall recall;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setContentView(R.layout.activity_main);
         spinner = (Spinner) findViewById(R.id.queries);
         textView = (TextView) findViewById(R.id.responseText);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
@@ -35,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 } else if (position == 1) {
                     startService(RestService.getNewVechilesIntent(MainActivity.this));
                 } else if (position == 2) {
-                    startService(RestService.getRecallIntent(MainActivity.this, "2015"));
-                }
+                    startService(RestService.getRecallIntent(MainActivity.this,"2015"));
+                   }
             }
 
             @Override

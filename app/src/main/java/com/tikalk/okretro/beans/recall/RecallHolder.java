@@ -49,6 +49,9 @@ public class RecallHolder {
     @Expose
     private String modelYear;
 
+    public RecallHolder() {
+    }
+
     /**
      * 
      * @return

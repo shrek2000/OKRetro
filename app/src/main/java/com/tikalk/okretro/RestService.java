@@ -14,6 +14,10 @@ import com.tikalk.okretro.query.APIKey;
 import com.tikalk.okretro.query.manufacturers.APIManufacturers;
 import com.tikalk.okretro.realm.recall.RecallUtils;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,7 +26,7 @@ import retrofit2.Response;
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
- * <p/>
+ * <p>
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
@@ -42,6 +46,7 @@ public class RestService extends IntentService {
     private APIManufacturers apiManufacturers;
     public static final String PARAM_STATUS_VALUE = "new";
     public static final String JSON_FORMAT = "json";
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
     public RestService() {
         super("RestService");
     }
@@ -73,6 +78,7 @@ public class RestService extends IntentService {
         intent.putExtra(FORMAT_PARM, JSON_FORMAT);
         return intent;
     }
+
     @NonNull
     public static Intent getNewVechilesIntent(Context context) {
         Intent intent = new Intent(context, RestService.class);
@@ -92,6 +98,7 @@ public class RestService extends IntentService {
         intent.putExtra(YEAR_PARAM, year);
         return intent;
     }
+
     /**
      * Starts this service to perform action Baz with the given parameters. If
      * the service is already performing a task this action will be queued.
@@ -104,24 +111,31 @@ public class RestService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(final Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            if (ACTION_MANUFACTURERS.equals(action)) {
-                final String key = intent.getStringExtra(API_KEY_PARAM);
-                final String format = intent.getStringExtra(FORMAT_PARM);
-                handleActionManufacturers(key, format);
-            } else if (ACTION_NEW_VEHICLES.equals(action)) {
-                final String key = intent.getStringExtra(API_KEY_PARAM);
-                final String format = intent.getStringExtra(FORMAT_PARM);
-                final String status = intent.getStringExtra(STATUS_PARM);
-                handleActionNewVehciles(key, format,status);
-            }else if (ACTION_RECALL.equals(action)) {
-                final String key = intent.getStringExtra(API_KEY_PARAM);
-                final String format = intent.getStringExtra(FORMAT_PARM);
-                final String year = intent.getStringExtra(YEAR_PARAM);
-                handleActionRecall(key, format,year);
-            }
+            executorService.submit(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    if (ACTION_MANUFACTURERS.equals(action)) {
+                        final String key = intent.getStringExtra(API_KEY_PARAM);
+                        final String format = intent.getStringExtra(FORMAT_PARM);
+                        handleActionManufacturers(key, format);
+                    } else if (ACTION_NEW_VEHICLES.equals(action)) {
+                        final String key = intent.getStringExtra(API_KEY_PARAM);
+                        final String format = intent.getStringExtra(FORMAT_PARM);
+                        final String status = intent.getStringExtra(STATUS_PARM);
+                        handleActionNewVehciles(key, format, status);
+                    } else if (ACTION_RECALL.equals(action)) {
+                        final String key = intent.getStringExtra(API_KEY_PARAM);
+                        final String format = intent.getStringExtra(FORMAT_PARM);
+                        final String year = intent.getStringExtra(YEAR_PARAM);
+                        handleActionRecall(key, format, year);
+                    }
+                    return null;
+                }
+            });
+
         }
     }
 
@@ -130,64 +144,75 @@ public class RestService extends IntentService {
      * parameters.
      */
     private void handleActionManufacturers(String key, String format) {
-        Call< Manufacturers> allVehiclesCall = apiManufacturers.getAllVehicles(format, key);
-        allVehiclesCall.enqueue(new Callback<Manufacturers>() {
-                @Override
-                public void onResponse(Call<Manufacturers> call, Response<Manufacturers> response) {
-                    SharedPreferences settings = getSharedPreferences(PREF_DATA, Context.MODE_PRIVATE);
-                    Manufacturers manufacturers = response.body();
-                    settings.edit().putString("response",manufacturers.toString()).commit();
-                    Log.i(RestService.class.toString(),"Manufacturers "+ response.message());
-
-                }
-
-                @Override
-                public void onFailure(Call<Manufacturers> call, Throwable t) {
-                    Log.e(RestService.class.toString(),"Manufacturers "+t.getMessage(),t);
-                 }
-            });
-     }
-
-    private void handleActionNewVehciles(String key, String format, String status) {
-        Call< Manufacturers> allVehiclesCall = apiManufacturers.getAllNewVehicles(format, key,status);
+        Call<Manufacturers> allVehiclesCall = apiManufacturers.getAllVehicles(format, key);
         allVehiclesCall.enqueue(new Callback<Manufacturers>() {
             @Override
             public void onResponse(Call<Manufacturers> call, Response<Manufacturers> response) {
                 SharedPreferences settings = getSharedPreferences(PREF_DATA, Context.MODE_PRIVATE);
                 Manufacturers manufacturers = response.body();
-                settings.edit().putString("response",manufacturers.toString()).commit();
-                Log.i(RestService.class.toString(),"new cars "+ response.message());
+                settings.edit().putString("response", manufacturers.toString()).commit();
+                Log.i(RestService.class.toString(), "Manufacturers " + response.message());
 
             }
 
             @Override
             public void onFailure(Call<Manufacturers> call, Throwable t) {
-                Log.e(RestService.class.toString(),"new cars "+t.getMessage(),t);
+                Log.e(RestService.class.toString(), "Manufacturers " + t.getMessage(), t);
+            }
+        });
+    }
+
+    private void handleActionNewVehciles(String key, String format, String status) {
+        Call<Manufacturers> allVehiclesCall = apiManufacturers.getAllNewVehicles(format, key, status);
+        allVehiclesCall.enqueue(new Callback<Manufacturers>() {
+            @Override
+            public void onResponse(Call<Manufacturers> call, Response<Manufacturers> response) {
+                SharedPreferences settings = getSharedPreferences(PREF_DATA, Context.MODE_PRIVATE);
+                Manufacturers manufacturers = response.body();
+                settings.edit().putString("response", manufacturers.toString()).commit();
+                Log.i(RestService.class.toString(), "new cars " + response.message());
+
+            }
+
+            @Override
+            public void onFailure(Call<Manufacturers> call, Throwable t) {
+                Log.e(RestService.class.toString(), "new cars " + t.getMessage(), t);
             }
         });
     }
 
     private void handleActionRecall(String key, String format, String year) {
-        Call<Recall> allVehiclesCall = apiManufacturers.getRecall(year,format, key);
+        Call<Recall> allVehiclesCall = apiManufacturers.getRecall(year, format, key);
         allVehiclesCall.enqueue(new Callback<Recall>() {
             @Override
             public void onResponse(Call<Recall> call, Response<Recall> response) {
+                final Realm realm = Realm.getDefaultInstance();
                 try {
-                    Realm realm = Realm.getInstance(RestService.this);
                     realm.beginTransaction();
-                    com.tikalk.okretro.realm.recall.Recall recallRealm = RecallUtils.convert(realm,response.body());
-                    realm.commitTransaction();
-                    Log.i(RestService.class.toString(),"recall "+ response.message());
+                    com.tikalk.okretro.realm.recall.Recall recallRealm = RecallUtils.convert(realm, response.body());
+                    Log.i(RestService.class.toString(), "recall " + response.body());
                 } catch (Throwable e) {
-                  Log.e(RestService.class.getName(),e.getMessage(),e);
+                    Log.e(RestService.class.getName(), e.getMessage(), e);
+                } finally {
+                    if (realm != null) {
+                        realm.commitTransaction();
+                    }
                 }
+                loadRecall();
 
             }
 
             @Override
             public void onFailure(Call<Recall> call, Throwable t) {
-                Log.e(RestService.class.toString(),"recall "+t.getMessage(),t);
+                Log.e(RestService.class.toString(), "recall " + t.getMessage(), t);
             }
         });
+    }
+
+    private void loadRecall(){
+        Realm realm = Realm.getDefaultInstance();
+        com.tikalk.okretro.realm.recall.Recall recall = realm.<com.tikalk.okretro.realm.recall.Recall>allObjects(com.tikalk.okretro.realm.recall.Recall.class).<com.tikalk.okretro.realm.recall.Recall>first();
+        Recall recallVar = RecallUtils.convert(recall);
+        Log.i(RestService.class.toString(), "recall " + recallVar);
     }
 }
