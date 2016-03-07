@@ -23,6 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
@@ -46,9 +47,10 @@ public class RestService extends IntentService {
     private APIManufacturers apiManufacturers;
     public static final String PARAM_STATUS_VALUE = "new";
     public static final String JSON_FORMAT = "json";
+    public static final String REST_SERVICE = "RestService";
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     public RestService() {
-        super("RestService");
+        super(REST_SERVICE);
     }
 
     @Override
@@ -198,9 +200,7 @@ public class RestService extends IntentService {
                         realm.commitTransaction();
                     }
                 }
-                loadRecall();
-
-            }
+             }
 
             @Override
             public void onFailure(Call<Recall> call, Throwable t) {
