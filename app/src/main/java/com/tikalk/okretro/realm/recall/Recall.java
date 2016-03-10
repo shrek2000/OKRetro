@@ -21,4 +21,10 @@ public class Recall extends RealmObject {
         this.recallHolder = recallHolder;
     }
 
+    @Override
+    public String toString() {
+        return "Recall{" +
+                "recallHolder=" + recallHolder +
+                '}';
+    }
 }

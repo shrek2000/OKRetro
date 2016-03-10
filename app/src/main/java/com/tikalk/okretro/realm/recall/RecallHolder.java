@@ -6,6 +6,7 @@ import io.realm.RealmObject;
  * Created by oren on 01/03/16.
  */
 public class RecallHolder  extends RealmObject {
+
     private Integer id;
     private String recallNumber;
     private String componentDescription;
@@ -123,4 +124,23 @@ public class RecallHolder  extends RealmObject {
     public void setModelYear(String modelYear) {
         this.modelYear = modelYear;
     }
+    @Override
+    public String toString() {
+        return "RecallHolder{" +
+                "id=" + id +
+                ", recallNumber='" + recallNumber + '\'' +
+                ", componentDescription='" + componentDescription + '\'' +
+                ", manufacturerRecallNumber='" + manufacturerRecallNumber + '\'' +
+                ", manufacturedFrom='" + manufacturedFrom + '\'' +
+                ", manufacturedTo='" + manufacturedTo + '\'' +
+                ", ownerNotificationDate='" + ownerNotificationDate + '\'' +
+                ", numberOfVehiclesAffected='" + numberOfVehiclesAffected + '\'' +
+                ", influencedBy='" + influencedBy + '\'' +
+                ", defectConsequence='" + defectConsequence + '\'' +
+                ", defectCorrectiveAction='" + defectCorrectiveAction + '\'' +
+                ", defectDescription='" + defectDescription + '\'' +
+                ", modelYear='" + modelYear + '\'' +
+                '}';
+    }
+
 }
