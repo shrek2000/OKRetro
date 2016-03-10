@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -53,7 +52,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 } else if (position == 1) {
                     startService(RestService.getNewVechilesIntent(MainActivity.this));
                 } else if (position == 2) {
-                    startService(RestService.getRecallIntent(MainActivity.this,"2015"));
+//                    startService(RestService.getRecallIntent(MainActivity.this,"2015"));
+//                    operationObservable.subscribe().
                    }
             }
 
