@@ -27,4 +27,20 @@ public class Recall extends RealmObject {
                 "recallHolder=" + recallHolder +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Recall)) return false;
+
+        Recall recall = (Recall) o;
+
+        return recallHolder != null ? recallHolder.equals(recall.recallHolder) : recall.recallHolder == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return recallHolder != null ? recallHolder.hashCode() : 0;
+    }
 }
